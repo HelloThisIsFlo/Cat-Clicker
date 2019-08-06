@@ -7,17 +7,26 @@ body {
   background-color: $bg;
 }
 
-.app {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+.app > * {
+  // border: solid 1px red;
 }
 
 .sandbox-link {
   font-size: 3em;
 }
 
-.cat-clicker {
+.cat-list {
+  font-size: 2em;
+  a {
+    color: $primary-color;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+.preview {
   display: flex;
   margin: auto;
   flex-direction: column;
