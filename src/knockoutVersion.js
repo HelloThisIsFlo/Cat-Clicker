@@ -2,7 +2,7 @@ import ko from "knockout";
 import styles from "./styles.scss";
 
 const ViewModel = function() {
-  this.name = ko.observable("Franky");
+  this.name = ko.observable("Frank");
   this.imgUrl = ko.observable("https://placekitten.com/500/400");
   this.clicked = ko.observable(0);
   this.level = ko.computed(function() {
@@ -16,6 +16,13 @@ const ViewModel = function() {
       return "wise cat";
     }
   }, this);
+
+  this.nicknames = ko.observableArray([
+    'franky',
+    'frakinou',
+    'Miiiiiiister Franky',
+    'Funky Franky'
+  ])
 
   this.incrementClickCount = () => {
     this.clicked(this.clicked() + 1);
@@ -34,6 +41,9 @@ function init() {
         styles.cat
       }" data-bind="click: incrementClickCount, attr: {src: imgUrl}" alt="cat" />
       <div class="${styles.counter}" data-bind="text: clicked"></div>
+      <ul data-bind="foreach: nicknames">
+        <li data-bind="text: $data"></li>
+      </ul>
     </div>
     `
   );
