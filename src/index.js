@@ -7,11 +7,15 @@ function addLinkToSandbox() {
   );
 }
 
-function addCatClicker() {
+function addCatClicker(catName, imgUrl) {
+  function setupName() {
+    catNameHeading.textContent = catName
+    catNameHeading.classList.add(styles.name)
+  }
   function setupImg() {
     catImg.classList.add(styles.cat);
     catImg.setAttribute("alt", "cat");
-    catImg.setAttribute("src", "https://placekitten.com/500/400");
+    catImg.setAttribute("src", imgUrl);
   }
   function setupCounter() {
     catCounter.classList.add(styles.counter);
@@ -19,12 +23,15 @@ function addCatClicker() {
   }
 
   const catClickerDiv = document.createElement("div");
+  const catNameHeading = document.createElement("h2");
   const catImg = document.createElement("img");
   const catCounter = document.createElement("div");
 
+  setupName();
   setupImg();
   setupCounter();
   catClickerDiv.classList.add(styles["cat-clicker"]);
+  catClickerDiv.appendChild(catNameHeading);
   catClickerDiv.appendChild(catImg);
   catClickerDiv.appendChild(catCounter);
 
@@ -46,7 +53,7 @@ function setupApp() {
   const app = document.getElementById("app");
   app.classList.add(styles.app);
 
-  addCatClicker();
+  addCatClicker("Patrick", "https://placekitten.com/500/400");
   addLinkToSandbox();
 }
 
