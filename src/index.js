@@ -1,18 +1,53 @@
 import styles from "./styles.scss";
-import _anotherStyle from './another.scss';
 
-const app = document.getElementById("app");
-
-function main() {
-  app.classList.add(styles.app)
-  addDebugElement();
+function addLinkToSandbox() {
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `<a class="${styles["sandbox-link"]}" href="sandbox.html">Sandbox</a>`
+  );
 }
 
-function addDebugElement() {
-  const debug = document.createElement("div");
-  debug.classList.add(styles.debug)
-  app.appendChild(debug);
+function addCatClicker() {
+  function setupImg() {
+    catImg.classList.add(styles.cat);
+    catImg.setAttribute("alt", "cat");
+    catImg.setAttribute("src", "https://placekitten.com/500/400");
+  }
+  function setupCounter() {
+    catCounter.classList.add(styles.counter);
+    catCounter.textContent = "0";
+  }
+
+  const catClickerDiv = document.createElement("div");
+  const catImg = document.createElement("img");
+  const catCounter = document.createElement("div");
+
+  setupImg();
+  setupCounter();
+  catClickerDiv.classList.add(styles["cat-clicker"]);
+  catClickerDiv.appendChild(catImg);
+  catClickerDiv.appendChild(catCounter);
+
+  catImg.addEventListener(
+    "click",
+    (() => {
+      let counter = 0;
+      return () => {
+        counter++;
+        catCounter.textContent = counter;
+      };
+    })()
+  );
+
+  app.appendChild(catClickerDiv);
 }
 
+function setupApp() {
+  const app = document.getElementById("app");
+  app.classList.add(styles.app);
 
-main();
+  addCatClicker();
+  addLinkToSandbox();
+}
+
+setupApp();
