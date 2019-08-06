@@ -1,0 +1,25 @@
+$primary-color: white;
+$bg: yellowgreen;
+
+body {
+  color: $primary-color;
+  background-color: $bg;
+  transform: translate(1, 1);
+}
+
+.app {
+  border: dashed salmon 5px;
+}
+
+.app {
+  .debug {
+    // This is a SCSS only comment, parsing should fail
+    // if postcss tries to read this file before it's converted!
+    height: 100px;
+    width: 100px;
+    transition: all 0.5s;
+    user-select: none;
+    background: linear-gradient(to bottom, blue, red);
+    filter: invert(1);
+  }
+}
