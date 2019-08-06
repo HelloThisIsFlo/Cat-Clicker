@@ -31,5 +31,8 @@
   },
   "browserslist": [
     "> 0.01%"
-  ]
+  ],
+  "dependencies": {
+    "knockout": "^3.5.0"
+  }
 }
