@@ -1,129 +1,139 @@
 import styles from "./styles.scss";
 
-const PREVIEW_IDS = {
-  img: "preview-img",
-  name: "preview-name",
-  counter: "preview-counter"
+const model = {
+  cats: [
+    { name: "Patrick", imgUrl: "https://placekitten.com/500/400", clicked: 0 },
+    { name: "Frank", imgUrl: "https://placekitten.com/480/400", clicked: 0 },
+    { name: "Georges", imgUrl: "https://placekitten.com/490/400", clicked: 0 },
+    { name: "Daniel", imgUrl: "https://placekitten.com/550/400", clicked: 0 }
+  ],
+
+  currentCat: null,
+
+  getCat(catName) {
+    for (const cat of this.cats) {
+      if (cat.name === catName) {
+        return cat;
+      }
+    }
+    throw `Cat '${catName}' not found!`;
+  }
 };
 
-const cats = [];
-let currentlySelectedCat = null;
+const octopus = {
+  init() {
+    catListView.init();
+    catPreviewView.init();
 
-function addCatToList(name, imgUrl) {
-  const newCat = { name, imgUrl, clicked: 0 };
-  cats.push(newCat);
-}
+    const firstCat = this.getAllCats()[0];
+    this.selectCat(firstCat.name);
+  },
 
-function ensureCatsAdded() {
-  if (cats.length == 0) {
-    throw "Add cats before performing this action!";
+  selectCat(catName) {
+    model.currentCat = model.getCat(catName);
+    catPreviewView.render();
+  },
+
+  clickOnCurrentCat() {
+    model.currentCat.clicked++;
+    catPreviewView.render();
+  },
+
+  getAllCats() {
+    return model.cats;
+  },
+
+  getCurrentCat() {
+    return model.currentCat;
   }
-}
+};
 
-function showCatInPreview(cat) {
-  const differentCat =
-    !currentlySelectedCat || currentlySelectedCat.name !== cat.name;
-
-  if (differentCat) {
-    console.log("Updating cat");
-
-    const catPreviewName = document.getElementById(PREVIEW_IDS.name);
-    const catPreviewImg = document.getElementById(PREVIEW_IDS.img);
-    const catPreviewCounter = document.getElementById(PREVIEW_IDS.counter);
-
-    catPreviewName.textContent = cat.name;
-    catPreviewImg.setAttribute("src", cat.imgUrl);
-    catPreviewCounter.textContent = cat.clicked;
-
-    currentlySelectedCat = cat;
-  }
-}
-
-function showCatList() {
-  ensureCatsAdded();
-  const catList = document.createElement("ul");
-  for (const cat of cats) {
-    const catEntry = document.createElement("li");
-    const catLink = document.createElement("a");
-    catLink.setAttribute("href", cat.name);
-    catLink.textContent = cat.name;
-    catLink.addEventListener("click", e => {
-      e.preventDefault();
-      showCatInPreview(cat);
-    });
-    catEntry.appendChild(catLink);
-    catList.appendChild(catEntry);
-  }
-  catList.classList.add(styles["cat-list"]);
-  app.appendChild(catList);
-}
-
-function showPreviewArea() {
-  function showEmptyPreviewArea() {
-    function setupName() {
-      catNameHeading.classList.add(styles.name);
-      catNameHeading.id = PREVIEW_IDS.name;
-    }
-    function setupImg() {
-      catImg.classList.add(styles.cat);
-      catImg.setAttribute("alt", "cat");
-      catImg.setAttribute("src", "");
-      catImg.id = PREVIEW_IDS.img;
-      catImg.addEventListener("click", () => {
-        if (currentlySelectedCat) {
-          currentlySelectedCat.clicked++;
-          catCounter.textContent = currentlySelectedCat.clicked;
-        }
+const catListView = {
+  init() {
+    const catEntry = catName => {
+      const catEntry = document.createElement("li");
+      const catLink = document.createElement("a");
+      catLink.setAttribute("href", catName);
+      catLink.textContent = catName;
+      catLink.addEventListener("click", e => {
+        e.preventDefault();
+        octopus.selectCat(catName);
       });
-    }
-    function setupCounter() {
-      catCounter.classList.add(styles.counter);
-      catCounter.id = PREVIEW_IDS.counter;
-    }
+      catEntry.appendChild(catLink);
+      return catEntry;
+    };
 
-    const previewArea = document.createElement("div");
-    const catNameHeading = document.createElement("h2");
-    const catCounter = document.createElement("div");
-    const catImg = document.createElement("img");
+    const catList = document.getElementById("cat-list");
+
+    octopus
+      .getAllCats()
+      .map(cat => cat.name)
+      .map(catEntry)
+      .forEach(entry => catList.appendChild(entry));
+
+    catList.classList.add(styles["cat-list"]);
+  },
+
+  render() {}
+};
+
+const catPreviewView = {
+  init() {
+    const setupName = () => {
+      this.name.classList.add(styles.name);
+    };
+    const setupImg = () => {
+      this.img.classList.add(styles.cat);
+      this.img.setAttribute("alt", "cat");
+      this.img.setAttribute("src", "");
+      this.img.addEventListener("click", () => {
+        octopus.clickOnCurrentCat();
+      });
+    };
+    const setupCounter = () => {
+      this.counter.classList.add(styles.counter);
+    };
+
+    this.name = document.createElement("h2");
+    this.counter = document.createElement("div");
+    this.img = document.createElement("img");
 
     setupName();
     setupImg();
     setupCounter();
 
+    const previewArea = document.getElementById("preview");
     previewArea.classList.add(styles.preview);
-    previewArea.appendChild(catNameHeading);
-    previewArea.appendChild(catImg);
-    previewArea.appendChild(catCounter);
+    previewArea.appendChild(this.name);
+    previewArea.appendChild(this.img);
+    previewArea.appendChild(this.counter);
+  },
 
-    app.appendChild(previewArea);
+  render() {
+    const currentCat = octopus.getCurrentCat();
+
+    this.name.textContent = currentCat.name;
+    this.img.setAttribute("src", currentCat.imgUrl);
+    this.counter.textContent = currentCat.clicked;
+  }
+};
+
+function main() {
+  function newElementWithId(tagName, id) {
+    const elmnt = document.createElement(tagName);
+    elmnt.id = id;
+    return elmnt;
   }
 
-  ensureCatsAdded();
-
-  showEmptyPreviewArea();
-  const firstCat = cats[0];
-  showCatInPreview(firstCat);
-}
-
-function showLinkToSandbox() {
-  document.body.insertAdjacentHTML(
-    "beforeend",
-    `<a class="${styles["sandbox-link"]}" href="sandbox.html">Sandbox</a>`
-  );
-}
-
-function setupApp() {
   const app = document.getElementById("app");
-  app.classList.add(styles.app);
 
-  addCatToList("Patrick", "https://placekitten.com/500/400");
-  addCatToList("Frank", "https://placekitten.com/480/400");
-  addCatToList("Georges", "https://placekitten.com/490/400");
-  addCatToList("Daniel", "https://placekitten.com/550/400");
+  const previewArea = newElementWithId("div", "preview");
+  const catList = newElementWithId("ul", "cat-list");
 
-  showCatList();
-  showPreviewArea();
-  showLinkToSandbox();
+  app.appendChild(catList);
+  app.appendChild(previewArea);
+
+  octopus.init();
 }
 
-setupApp();
+main();
