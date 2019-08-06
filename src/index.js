@@ -54,6 +54,7 @@ function setupApp() {
   app.classList.add(styles.app);
 
   addCatClicker("Patrick", "https://placekitten.com/500/400");
+  addCatClicker("Frank", "https://placekitten.com/480/400");
   addLinkToSandbox();
 }
 
