@@ -5,6 +5,17 @@ const ViewModel = function() {
   this.name = ko.observable("Franky");
   this.imgUrl = ko.observable("https://placekitten.com/500/400");
   this.clicked = ko.observable(0);
+  this.level = ko.computed(function() {
+    if (this.clicked() < 5) {
+      return "newborn";
+    } else if (this.clicked() < 15) {
+      return "teenager";
+    } else if (this.clicked() < 25) {
+      return "adult";
+    } else {
+      return "wise cat";
+    }
+  }, this);
 
   this.incrementClickCount = () => {
     this.clicked(this.clicked() + 1);
@@ -18,6 +29,7 @@ function init() {
     `
     <div class="${styles.preview}">
       <h2 class="${styles.name}" data-bind="text: name"></h2>
+      <h3 class="${styles.level}" data-bind="text: level"></h3>
       <img class="${
         styles.cat
       }" data-bind="click: incrementClickCount, attr: {src: imgUrl}" alt="cat" />
