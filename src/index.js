@@ -50,6 +50,13 @@ const octopus = {
 
 const catListView = {
   init() {
+    this.catList = document.getElementById("cat-list");
+    this.catList.classList.add(styles["cat-list"]);
+
+    this.render();
+  },
+
+  render() {
     const catEntry = catName => {
       const catEntry = document.createElement("li");
       const catLink = document.createElement("a");
@@ -63,18 +70,14 @@ const catListView = {
       return catEntry;
     };
 
-    const catList = document.getElementById("cat-list");
+    this.catList.innerHTML = "";
 
     octopus
       .getAllCats()
       .map(cat => cat.name)
       .map(catEntry)
-      .forEach(entry => catList.appendChild(entry));
-
-    catList.classList.add(styles["cat-list"]);
-  },
-
-  render() {}
+      .forEach(entry => this.catList.appendChild(entry));
+  }
 };
 
 const catPreviewView = {
@@ -113,7 +116,7 @@ const catPreviewView = {
     const currentCat = octopus.getCurrentCat();
 
     this.name.textContent = currentCat.name;
-    this.img.setAttribute("src", currentCat.imgUrl);
+    this.img.src = currentCat.imgUrl;
     this.counter.textContent = currentCat.clicked;
   }
 };
